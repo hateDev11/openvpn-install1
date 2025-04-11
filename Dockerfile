@@ -14,5 +14,4 @@ RUN chmod +x /openvpn-install.sh
 
 EXPOSE 1194/udp
 
-# Скрипт запускается в контейнере, а не во время сборки
 CMD ["bash", "/openvpn-install.sh"]
