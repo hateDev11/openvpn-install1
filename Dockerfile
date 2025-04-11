@@ -1,18 +1,19 @@
-FROM debian:bullseye
+FROM debian:bullseye-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
+# Устанавливаем необходимые пакеты
+RUN apt-get update && apt-get install -y \
+    bash \
+    iproute2 \
+    iptables \
+    openvpn \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y curl iptables openvpn unzip wget net-tools gnupg ca-certificates systemd && \
-    apt-get clean
-
+# Копируем скрипт в контейнер
 COPY openvpn-install.sh /openvpn-install.sh
+
+# Делаем его исполняемым
 RUN chmod +x /openvpn-install.sh
 
-RUN /openvpn-install.sh <<EOF
-1
-EOF
-
-EXPOSE 1194/udp
-
-CMD ["openvpn", "--config", "/etc/openvpn/server/server.conf"]
+# Запускаем его
+CMD ["/openvpn-install.sh"]
